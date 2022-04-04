@@ -11,6 +11,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Title</th>
                 <th scope="col">Category</th>
+                <th scope="col">Tags</th>
                 <th scope="col">Slug</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -26,10 +27,23 @@
                         @if ($post->category)
                         <span
                             class="badge badge-{{ $post->category->color }}">{{ $post->category->label }}</span>
-                    @else
-                        -
-                    @endif
+                        @else
+                        
+                        @endif
                     </td> 
+
+                    <td>
+                       @forelse ($post->tags as $tag)
+                        <span class="badge"
+                            style="background-color: {{ $tag->color ?? '#747474' }}">{{ $tag->label }}
+                        </span>
+                       @empty
+                       <span class="badge badge-dark">
+                        <i class="fa-solid fa-ban"></i>
+                       </span>
+                       @endforelse
+                    </td>
+
                     <td>{{ $post->slug }}</td>
                     <td>
                         <a class="btn btn-warning" href="{{ route('admin.posts.edit', $post) }}">Edit</a>

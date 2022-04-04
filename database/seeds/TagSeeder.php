@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Tag;
+use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
@@ -10,7 +11,7 @@ class TagSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(Faker $faker)
     {
         //
 
@@ -21,7 +22,7 @@ class TagSeeder extends Seeder
         foreach ($labels as $label) {
             $t = new Tag();
             $t->label = $label;
-            $t->color = $label['color'];
+            $t->color = $faker->safeHexColor();
             $t->save();
         }
     }
