@@ -77,7 +77,7 @@ class PostController extends Controller
         $data['slug'] = Str::slug($request->title, '-');
 
         if (array_key_exists('image', $data)) {
-            $img_post = Storage::put('uploads', $data['image']);
+            $img_post = Storage::put('uploads_img', $data['image']);
             $data['image'] = $img_post;
         }
 
@@ -176,8 +176,10 @@ class PostController extends Controller
     {
         //
         $post->delete();
-        if ($post->image) Storage::delete($post->image);
+
         if (count($post->tags)) $post->tags()->detach();
+
+        if ($post->image) Storage::delete($post->image);
 
         return redirect()->route('admin.posts.index', $post)->with('massage', 'il post $post-id è stato eliminato');
     }

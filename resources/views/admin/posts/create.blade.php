@@ -35,7 +35,7 @@
                 <div class="col-12 mb-4">
                 <select class="custom-select" name="category_id">
 
-                    @error('category_id') is-valid @enderror>
+                    @error('category_id') is--invalid @enderror>
                         <option value=""> Nessuna categoria</option>
                         @foreach ($categories as $category) @endforeach
                     @foreach ($categories as $category)
@@ -55,7 +55,7 @@
                     <div class="form-check form-check-inline">
                         @foreach ($tags as $tag)
                             <input class="form-check-input ml-2" type="checkbox" id="tag-{{ $loop->iteration }}"
-                                value="{{ $tag->id }}" name="tags" @if (in_array($tag->id, old('tags', []))) checked @endif>
+                                value="{{ $tag->id }}" name="tags[]" @if (in_array($tag->id, old('tags', []))) checked @endif>
                             <label class="form-check-label" for="tag-{{ $loop->iteration }}">{{ $tag->label }}</label>
                         @endforeach
                     </div>
