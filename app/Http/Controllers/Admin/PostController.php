@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 
 class PostController extends Controller
@@ -53,13 +54,15 @@ class PostController extends Controller
                 'title' => 'required|string|unique:posts|min:5|max:255',
                 'image' => 'required|string|unique:posts',
                 'description' => 'required|string',
-                'category_id' => 'nullable|exists:categories,id'
+                'category_id' => 'nullable|exists:categories,id',
+                'tags' => 'nullable|exists:tags,id',
             ],
             [
                 'required' => 'Il campo :attribute è obbligatorio!',
                 'title.unique' => "Il Post $request->title è già esistente!",
                 'image.unique' => "Questa immagine è già stata inserita!",
-                'title.min' => "$request->title è lungo meno di 5 caratteri!"
+                'title.min' => "$request->title è lungo meno di 5 caratteri!",
+                'tags.exists' => 'Il tag selezionato non è valido'
             ]
         );
 
@@ -69,7 +72,7 @@ class PostController extends Controller
 
         $post = Post::create($data);
 
-        return redirect()->route('admin.posts.index')->with('message', "$post->title creato con successo");
+        return redirect()->route('admin.posts.show', compact('post'));
     }
 
     /**
@@ -94,7 +97,9 @@ class PostController extends Controller
     {
         //
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -113,7 +118,8 @@ class PostController extends Controller
                 'title' => 'required|string|unique:posts|min:5|max:255',
                 'image' => 'required|string|unique:posts',
                 'description' => 'required|string',
-                'category_id' => 'nullable|exists:categories,id'
+                'category_id' => 'nullable|exists:categories,id',
+                'tags' => 'nullable|exists:tags,id'
             ],
             [
                 'required' => 'Il campo :attribute è obbligatorio!',
@@ -127,6 +133,9 @@ class PostController extends Controller
 
         $data['slug'] = Str::slug($request->title, '-');
         $post->update();
+
+        if (array_key_exists('tags', $data)) $post->tags()->sync($data['tags']);
+        else $post->tags()->detach();
 
         return redirect()->route('admin.posts.show', compact('post'));
     }

@@ -51,6 +51,16 @@
                   </div>
                 @enderror
 
+                <div class="col-12">
+                    <div class="form-check form-check-inline">
+                        @foreach ($tags as $tag)
+                            <input class="form-check-input ml-2" type="checkbox" id="tag-{{ $loop->iteration }}"
+                                value="{{ $tag->id }}" name="tags[]">
+                            <label class="form-check-label" for="tag-{{ $loop->iteration }}">{{ $tag->label }}</label>
+                        @endforeach
+                    </div>
+                </div>
+
                 </div>
                 <div class="col-12">
                     <input type="text" class="form-control" placeholder="Url Immagine" name="image" id="image">
