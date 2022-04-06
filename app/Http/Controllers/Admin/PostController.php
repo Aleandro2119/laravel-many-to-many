@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -38,7 +39,8 @@ class PostController extends Controller
         $post = new Post();
         $categories = Category::all();
         $tags = Tag::all();
-        return view('admin.posts.create', compact('post', 'categories', 'tags'));
+        $post_tags = $post->tags->pluck('id')->toArray();
+        return view('admin.posts.create', compact('post', 'categories', 'tags', 'post_tags'));
     }
 
     /**
@@ -53,7 +55,7 @@ class PostController extends Controller
         $request->validate(
             [
                 'title' => 'required|string|unique:posts|min:5|max:255',
-                'image' => 'required|string|unique:posts',
+                'image' => 'nullable|file',
                 'description' => 'required|string',
                 'category_id' => 'nullable|exists:categories,id',
                 'tags' => 'nullable|exists:tags,id',
@@ -70,6 +72,11 @@ class PostController extends Controller
         $data = $request->all();
 
         $data['slug'] = Str::slug($request->title, '-');
+
+        if (array_key_exists('image', $data)) {
+            $img_post = Storage::put('uploads', $data['image']);
+            $data['image'] = $img_post;
+        }
 
         $post = Post::create($data);
 
@@ -120,7 +127,7 @@ class PostController extends Controller
         $request->validate(
             [
                 'title' => 'required|string|unique:posts|min:5|max:255',
-                'image' => 'required|string|unique:posts',
+                'image' => 'nullable|file',
                 'description' => 'required|string',
                 'category_id' => 'nullable|exists:categories,id',
                 'tags' => 'nullable|exists:tags,id'
@@ -135,6 +142,13 @@ class PostController extends Controller
         );
 
         $data = $request->all();
+
+        if (array_key_exists('image', $data)) {
+            if ($post->image) Storage::delete($post->image);
+
+            $img_post = Storage::put('post_image', $data['image']);
+            $data['image'] = $img_post;
+        }
 
         $data['slug'] = Str::slug($request->title, '-');
         $post->update();
@@ -155,6 +169,7 @@ class PostController extends Controller
     {
         //
         $post->delete();
+        if ($post->image) Storage::delete($post->image);
         if (count($post->tags)) $post->tags()->detach();
 
         return redirect()->route('admin.posts.index', $post)->with('massage', 'il post $post-id è stato eliminato');

@@ -14,7 +14,7 @@
         @endif
 
         <h1>Aggiungi un Post</h1>
-        <form action="{{ route('admin.posts.store') }}" method="post">
+        <form action="{{ route('admin.posts.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row gy-5">
                 <div class="col-12">
@@ -63,7 +63,7 @@
 
                 </div>
                 <div class="col-12">
-                    <input type="text" class="form-control" placeholder="Url Immagine" name="image" id="image">
+                    <input type="file" class="form-control-file" placeholder="Url Immagine" name="image" id="image">
                 </div>
             </div>
             <div class="controls d-flex justify-content-end mt-2">
