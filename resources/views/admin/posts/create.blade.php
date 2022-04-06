@@ -14,12 +14,12 @@
         @endif
 
         <h1>Aggiungi un Post</h1>
-        <form action="{{ route('admin.posts.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('admin.posts.store') }}" method="post" enctype="multipart/form-data novalidate">
             @csrf
             <div class="row gy-5">
                 <div class="col-12">
                     <input type="text" class="form-control"
-                    @error('title') is-valid @enderror id="title"
+                    @error('title') is-invalid @enderror id="title"
                     name="title">
 
                 @error('title')
@@ -61,9 +61,17 @@
                     </div>
                 </div>
 
+                @if ($post->image)
+                        <img src="{{ asset("storage/$post->image") }}" alt="placeholder" class="img-fluid"
+                            id="preview">
+                    @else
+                        <img src=" https://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/1024/Preview-icon.png"
+                            alt="placeholder" class="img-fluid" id="preview">
+                    @endif
+
                 </div>
                 <div class="col-12">
-                    <input type="file" class="form-control-file" placeholder="Url Immagine" name="image" id="image">
+                    <input type="file" class="form-control-file @error('image') is-invalid @enderror" placeholder="Url Immagine" name="image" id="image">
                 </div>
             </div>
             <div class="controls d-flex justify-content-end mt-2">

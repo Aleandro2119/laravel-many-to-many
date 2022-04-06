@@ -55,7 +55,7 @@ class PostController extends Controller
         $request->validate(
             [
                 'title' => 'required|string|unique:posts|min:5|max:255',
-                'image' => 'nullable|file',
+                'image' => 'nullable|image',
                 'description' => 'required|string',
                 'category_id' => 'nullable|exists:categories,id',
                 'tags' => 'nullable|exists:tags,id',
@@ -127,7 +127,7 @@ class PostController extends Controller
         $request->validate(
             [
                 'title' => 'required|string|unique:posts|min:5|max:255',
-                'image' => 'nullable|file',
+                'image' => 'nullable|image',
                 'description' => 'required|string',
                 'category_id' => 'nullable|exists:categories,id',
                 'tags' => 'nullable|exists:tags,id'
