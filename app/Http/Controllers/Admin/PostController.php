@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Mail\SendNewMail;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -81,6 +84,10 @@ class PostController extends Controller
         $post = Post::create($data);
 
         if (array_key_exists('tags', $data)) $post->tags()->attach($data['tags']);
+
+        $mail_new_post = new SendNewMail($post);
+        $user = Auth::user();
+        Mail::to($user->email)->send($mail_new_post);
 
         return redirect()->route('admin.posts.show', compact('post'));
     }
