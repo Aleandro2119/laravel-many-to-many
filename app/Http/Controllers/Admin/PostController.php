@@ -101,8 +101,9 @@ class PostController extends Controller
         //
         $categories = Category::all();
         $tags = Tag::all();
+        $post_tags = $post->tags->pluck('id')->toArray();
 
-        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
+        return view('admin.posts.edit', compact('post', 'categories', 'tags', 'post_tags'));
     }
 
     /**
@@ -128,7 +129,8 @@ class PostController extends Controller
                 'required' => 'Il campo :attribute è obbligatorio!',
                 'title.unique' => "Il Post $request->title è già esistente!",
                 'image.unique' => "Questa immagine è già stata inserita!",
-                'title.min' => "$request->title è lungo meno di 5 caratteri!"
+                'title.min' => "$request->title è lungo meno di 5 caratteri!",
+                'tags.exists' => 'Il tag selezionato non è valido'
             ]
         );
 
@@ -137,8 +139,8 @@ class PostController extends Controller
         $data['slug'] = Str::slug($request->title, '-');
         $post->update();
 
-        if (array_key_exists('tags', $data)) $post->tags()->sync($data['tags']);
-        else $post->tags()->detach();
+        if (!array_key_exists('tags', $data)) $post->tags()->detach($data['tags']);
+        else $post->tags()->sync($data['tags']);
 
         return redirect()->route('admin.posts.show', compact('post'));
     }
@@ -153,6 +155,7 @@ class PostController extends Controller
     {
         //
         $post->delete();
+        if (count($post->tags)) $post->tags()->detach();
 
         return redirect()->route('admin.posts.index', $post)->with('massage', 'il post $post-id è stato eliminato');
     }
