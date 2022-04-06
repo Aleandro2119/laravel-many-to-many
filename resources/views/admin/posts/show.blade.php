@@ -4,10 +4,10 @@
     <div class="container">
         <div class="card mx-auto w-50">
             @if ($post->image)
-                <img width="200" src="{{ asset("storage/$post->image") }}" alt="placeholder" class="img-fluid"
+                <img  src="{{ asset("storage/$post->image") }}" alt="placeholder" class="img-fluid"
                     id="preview">
             @else
-                <img width="200" src=" https://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/1024/Preview-icon.png"
+                <img src=" https://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/1024/Preview-icon.png"
                     alt="placeholder" class="img-fluid" id="preview">
             @endif
             <div class="card-body">
