@@ -55,18 +55,18 @@
                     <div class="form-check form-check-inline">
                         @foreach ($tags as $tag)
                             <input class="form-check-input ml-2" type="checkbox" id="tag-{{ $loop->iteration }}"
-                                value="{{ $tag->id }}" name="tags[]" @if (in_array($tag->id, old('tags', []))) checked @endif>
+                                value="{{ $tag->id }}" name="tags" @if (in_array($tag->id, old('tags', []))) checked @endif>
                             <label class="form-check-label" for="tag-{{ $loop->iteration }}">{{ $tag->label }}</label>
                         @endforeach
                     </div>
                 </div>
 
                 @if ($post->image)
-                        <img src="{{ asset("storage/$post->image") }}" alt="placeholder" class="img-fluid"
+                        <img src="{{ asset("storage/$post->image") }}" alt="placeholder" class="img-fluid" width="50"
                             id="preview">
                     @else
                         <img src=" https://icons.iconarchive.com/icons/ccard3dev/dynamic-yosemite/1024/Preview-icon.png"
-                            alt="placeholder" class="img-fluid" id="preview">
+                            alt="placeholder" class="img-fluid" width="50" id="preview">
                     @endif
 
                 </div>
